@@ -1,13 +1,6 @@
 package ssr
 
 import (
-	"context"
-	"net"
-	"os"
-	"os/signal"
-	"runtime"
-	"syscall"
-
 	"github.com/jWhisper/ssrlocal/configs"
 	"github.com/jWhisper/ssrlocal/errs"
 	"github.com/jWhisper/ssrlocal/internal/ssr/obfs"
@@ -53,56 +46,6 @@ func NewServer(cnf configs.Cnf) (s *server, err error) {
 	return
 }
 
-func (s *server) Start() error {
-	runtime.GOMAXPROCS(runtime.NumCPU())
-	logger.Print("start ssrlocal server")
-	ln, err := net.Listen("tcp", s.lp)
-	if err != nil {
-		logger.Print("failed to listen port", s.lp)
-		os.Exit(1)
-	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-
-	for i := 0; i < runtime.NumCPU(); i++ {
-		go func() {
-			for {
-				conn, err := ln.Accept()
-				if err != nil {
-					return
-				}
-				go handTcpConn(s, conn)
-			}
-		}()
-	}
-
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGHUP)
-	for {
-		select {
-		case <-ctx.Done():
-			goto endSig
-		case c := <-ch:
-			logger.Print("catch a signal:", c)
-			switch c {
-			case syscall.SIGHUP:
-				continue
-			default:
-				goto endSig
-			}
-		}
-	}
-endSig:
-	cancel()
-	ln.Close()
-	return nil
-}
-
-func handTcpConn(s *server, conn net.Conn) error {
-	defer conn.Close()
-	return nil
-}
-
-func handUdpConn(s *server, conn net.Conn) error {
-	return nil
+func Run(s *server) error {
+	return s.StartTcp()
 }
