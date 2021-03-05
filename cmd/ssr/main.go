@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	logger = log.WithLevelAndMeta(log.DefaultLogger, log.LvInfo, "ssrlocal:")
+	//logger = log.WithLevelAndMeta(log.DefaultLogger, log.LvInfo, "ssrlocal:")
 	rootCmd.AddCommand(project.ConfigCmd)
 	rootCmd.AddCommand(project.StartCmd)
 	rootCmd.AddCommand(project.StopCmd)

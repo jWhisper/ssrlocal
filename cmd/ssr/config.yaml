@@ -3,7 +3,7 @@ additional_ports_only: false
 connect_verbose_info: 0
 dns_ipv6: false
 fast_open: false
-local_port: 1080
+local_port: :1080
 log:
   level: "0"
   log_file: ""
@@ -16,7 +16,7 @@ protocol_param: xxxx
 redirect: ""
 server:
 - ss_provider_ips
-server_port: 1020
+server_port: :1020
 speed_limit_per_con: 0
 speed_limit_per_user: 0
 timeout: 60

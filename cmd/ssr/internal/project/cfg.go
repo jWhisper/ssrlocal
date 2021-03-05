@@ -32,9 +32,9 @@ func initCfg() {
 	viper.SetConfigFile(newCfg)
 
 	// Set default value
-	viper.SetDefault("server", []string{"ss_provider_ips"})
-	viper.SetDefault("server_port", 1020)
-	viper.SetDefault("local_port", 1080)
+	viper.SetDefault("server", []string{"ss_provider_ip1"})
+	viper.SetDefault("server_port", ":1020")
+	viper.SetDefault("local_port", ":1080")
 	viper.SetDefault("password", "pass")
 	viper.SetDefault("protocol", "auth_aes128_md5")
 	viper.SetDefault("protocol_param", "xxxx")
