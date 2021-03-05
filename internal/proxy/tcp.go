@@ -72,5 +72,6 @@ func handTcpConn(s *server, conn *net.TCPConn) (err error) {
 		return
 	}
 	dstAddr, err := socks5.HandShake(conn)
+	logger.Print(dstAddr, err)
 	return
 }
