@@ -8,4 +8,6 @@ var (
 	InvalidRemoteServers   = errors.New("invalid remote servers")
 	ErrAddressNotSupported = errors.New("invalid dst address")
 	ErrCommandNotSupported = errors.New("invalid command")
+
+	ErrCipherMethodNotSupported = errors.New("invalid cipher method")
 )

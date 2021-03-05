@@ -16,15 +16,16 @@ var (
 )
 
 type server struct {
-	addrs  []string
-	rp, lp string
-	cnf    configs.Cnf
-	obfs   obfs.Obfs
-	pro    pro.Protocol
-	err    error
+	addrs     []string
+	t, rp, lp string
+	cnf       configs.Cnf
+	obfs      obfs.Obfs
+	pro       pro.Protocol
+	err       error
 }
 
 func NewServer(cnf configs.Cnf) (s *server, err error) {
+	t := cnf.GetString("type")
 	lp, ok := cnf.Get("local_port").(string)
 	if !ok {
 		return nil, errs.InvalidLocalPort
@@ -40,6 +41,7 @@ func NewServer(cnf configs.Cnf) (s *server, err error) {
 	logger.Print("listen at", lp, ";", "remote servers:", addrs, "remote port", rp)
 
 	s = &server{
+		t:     t,
 		cnf:   cnf,
 		addrs: addrs, // a server slice
 		rp:    rp,

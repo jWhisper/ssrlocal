@@ -71,7 +71,6 @@ func handTcpConn(s *server, conn *net.TCPConn) (err error) {
 	if err = conn.SetWriteBuffer(tcpSndBuf); err != nil {
 		return
 	}
-	dstaddr, err := socks.HandShake(conn)
-	logger.Print("dstaddr", dstaddr)
+	dstAddr, err := socks.HandShake(conn)
 	return
 }

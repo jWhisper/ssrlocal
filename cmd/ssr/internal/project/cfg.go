@@ -45,6 +45,7 @@ func initCfg() {
 	viper.SetDefault("timeout", 60)
 	viper.SetDefault("udp_timeout", 60)
 	viper.SetDefault("log", map[string]string{"level": "0", "log_file": ""})
+	viper.SetDefault("type", "ssr")
 
 	// uncomplete
 	viper.SetDefault("speed_limit_per_con", 0)
