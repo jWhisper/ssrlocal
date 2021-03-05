@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/jWhisper/ssrlocal/internal/socks5"
+	"github.com/jWhisper/ssrlocal/internal/proxy/socks5"
 )
 
 func (s *server) StartTCP() (err error) {

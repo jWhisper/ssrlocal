@@ -4,7 +4,7 @@ import (
 	"io"
 	"net"
 
-	"github.com/jWhisper/ssrlocal/internal/ssr/encrypt"
+	"github.com/jWhisper/ssrlocal/internal/encrypt"
 )
 
 var _ io.ReadWriter = (*SSRTcpConn)(nil)
