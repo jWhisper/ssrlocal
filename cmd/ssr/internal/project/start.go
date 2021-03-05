@@ -36,5 +36,5 @@ func impStart() {
 		log.Fatalf("failed to get a server, check config", err)
 		return
 	}
-	server.Start()
+	server.StartTCP()
 }

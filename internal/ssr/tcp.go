@@ -7,20 +7,22 @@ import (
 	"os/signal"
 	"runtime"
 	"syscall"
+
+	"github.com/jWhisper/ssrlocal/internal/ssr/socks"
 )
 
 func (s *server) StartTCP() (err error) {
-	runtime.GOMAXPROCS(runtime.NumCPU())
 	var bind *net.TCPAddr
 	if bind, err = net.ResolveTCPAddr("tcp", s.lp); err != nil {
 		return
 	}
 	ln, err := net.ListenTCP("tcp", bind)
 	if err != nil {
-		logger.Print("failed to listen port", s.lp)
+		logger.Print("failed to listen local port", s.lp)
 		os.Exit(1)
 	}
-	logger.Print("start ssrlocal server; listening...")
+
+	logger.Print("start ssrlocal server; listening... (curl --socks5 127.0.0.1:1080 http://www.google.com) for test")
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -60,9 +62,16 @@ endSig:
 
 func handTcpConn(s *server, conn *net.TCPConn) (err error) {
 	defer conn.Close()
+	if err = conn.SetKeepAlive(tcpKeepAlive); err != nil {
+		return
+	}
+	if err = conn.SetReadBuffer(tcpRcvBuf); err != nil {
+		return
+	}
+	if err = conn.SetWriteBuffer(tcpSndBuf); err != nil {
+		return
+	}
+	dstaddr, err := socks.HandShake(conn)
+	logger.Print("dstaddr", dstaddr)
 	return
-}
-
-func handUdpConn(s *server, conn *net.Conn) error {
-	return nil
 }
