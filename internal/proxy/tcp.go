@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/jWhisper/ssrlocal/internal/ssr/socks"
+	"github.com/jWhisper/ssrlocal/internal/socks5"
 )
 
 func (s *server) StartTCP() (err error) {
@@ -71,6 +71,6 @@ func handTcpConn(s *server, conn *net.TCPConn) (err error) {
 	if err = conn.SetWriteBuffer(tcpSndBuf); err != nil {
 		return
 	}
-	dstAddr, err := socks.HandShake(conn)
+	dstAddr, err := socks5.HandShake(conn)
 	return
 }

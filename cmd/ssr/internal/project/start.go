@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/jWhisper/ssrlocal/configs"
-	"github.com/jWhisper/ssrlocal/internal/ssr"
+	"github.com/jWhisper/ssrlocal/internal/proxy"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -31,7 +31,7 @@ func impStart() {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("failed to read conf: %s\n", err)
 	}
-	server, err := ssr.NewServer(viper.GetViper())
+	server, err := proxy.NewServer(viper.GetViper())
 	if err != nil {
 		log.Fatalf("failed to get a server, check config", err)
 		return

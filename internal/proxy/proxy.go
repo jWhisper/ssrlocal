@@ -1,10 +1,10 @@
-package ssr
+package proxy
 
 import (
 	"github.com/jWhisper/ssrlocal/configs"
 	"github.com/jWhisper/ssrlocal/errs"
-	"github.com/jWhisper/ssrlocal/internal/ssr/obfs"
-	"github.com/jWhisper/ssrlocal/internal/ssr/pro"
+	"github.com/jWhisper/ssrlocal/internal/obfs"
+	"github.com/jWhisper/ssrlocal/internal/protocol"
 	"github.com/jWhisper/ssrlocal/pkg/log"
 )
 
@@ -20,7 +20,7 @@ type server struct {
 	t, rp, lp string
 	cnf       configs.Cnf
 	obfs      obfs.Obfs
-	pro       pro.Protocol
+	protocol  protocol.Protocol
 	err       error
 }
 
@@ -41,14 +41,14 @@ func NewServer(cnf configs.Cnf) (s *server, err error) {
 	logger.Print("listen at", lp, ";", "remote servers:", addrs, "remote port", rp)
 
 	s = &server{
-		t:     t,
-		cnf:   cnf,
-		addrs: addrs, // a server slice
-		rp:    rp,
-		lp:    lp,
-		obfs:  obfs.ObfsImp{},
-		pro:   pro.ProImp{},
-		err:   err,
+		t:        t,
+		cnf:      cnf,
+		addrs:    addrs, // a server slice
+		rp:       rp,
+		lp:       lp,
+		obfs:     obfs.ObfsImp{},
+		protocol: protocol.ProImp{},
+		err:      err,
 	}
 	return
 }
