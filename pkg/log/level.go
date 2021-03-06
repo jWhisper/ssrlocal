@@ -3,11 +3,7 @@ package log
 // Level is logger level
 type Level int8
 
-var globalLevel = LvDebug
-
-func init() {
-	globalLevel = LvInfo
-}
+var GlobalLevel = LvDebug
 
 // logger Level
 const (
@@ -18,7 +14,7 @@ const (
 
 // Active whether can print or not
 func (l Level) Active() bool {
-	return l >= globalLevel
+	return l >= GlobalLevel
 }
 
 // String get LvString
