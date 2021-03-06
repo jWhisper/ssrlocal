@@ -1,40 +1,29 @@
 package log
 
-import "fmt"
-
-var globalLevel = LvDebug
-
-func init() {
-	globalLevel = LvInfo
-}
-
+// Logger is logger interface
 type Logger interface {
-	Lv(lv Level) Logger
 	Print(msg ...interface{})
 }
 
-type logger struct {
-	log  Logger
-	inLv Level
+type lvAndmetaLogger struct {
+	l  Logger
+	md string
+	lv Level
 }
 
-func (l *logger) Lv(lv Level) Logger {
-	// TODO: thread safe
-	l.inLv = lv
-	return l.log.Lv(lv)
-}
-
-func (l *logger) Print(msg ...interface{}) {
-	if l.inLv >= globalLevel {
-		tmp := make([]interface{}, len(msg)+1)
-		tmp[0] = fmt.Sprintf("%s", l.inLv)
-		l.log.Print(append(tmp, msg...)...)
+func (lm *lvAndmetaLogger) Print(msg ...interface{}) {
+	if lm.lv.Active() {
+		tmp := []interface{}{lm.lv.String(), lm.md}
+		tmp = append(tmp, msg...)
+		lm.l.Print(tmp...)
 	}
 }
 
-func With(l Logger) Logger {
-	return &logger{
-		log:  l,
-		inLv: LvDebug,
+// WithLevelAndMeta return a logger has lv and metadata
+func WithLevelAndMeta(l Logger, lv Level, md string) Logger {
+	return &lvAndmetaLogger{
+		l:  l,
+		md: md,
+		lv: lv,
 	}
 }
