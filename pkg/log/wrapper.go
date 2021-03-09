@@ -1,5 +1,7 @@
 package log
 
+import "github.com/jWhisper/ssrlocal/pkg/maths"
+
 type wrapper []Logger
 
 type logOpt struct {
@@ -14,15 +16,15 @@ func NewWrapper(md string, logs ...Logger) (w wrapper) {
 		md = "default:"
 	}
 	w = make(wrapper, 3)
-	ls := []Level{LvDebug, LvInfo, LvError}
+	// ls := []Level{LvDebug, LvInfo, LvError}
 	dl := WithLevelAndMeta(DefaultLogger, LvDebug, md)
 	il := WithLevelAndMeta(DefaultLogger, LvInfo, md)
 	rl := WithLevelAndMeta(DefaultLogger, LvError, md)
 	w[0] = dl
 	w[1] = il
 	w[2] = rl
-	for i, l := range logs {
-		w[i] = WithLevelAndMeta(l, ls[i], md)
+	for i := 0; i < maths.MinInt(3, len(logs)); i++ {
+		w[i] = WithLevelAndMeta(logs[i], 0, md)
 	}
 	return
 }
