@@ -3,7 +3,7 @@ package log
 // Level is logger level
 type Level int8
 
-var GlobalLevel = LvDebug
+var GlobalLevel = LvInfo
 
 // logger Level
 const (
@@ -21,7 +21,7 @@ func (l Level) Active() bool {
 func (l Level) String() string {
 	switch l {
 	case LvDebug:
-		return "DeBug"
+		return "Debug"
 	case LvInfo:
 		return "Info"
 	case LvError:

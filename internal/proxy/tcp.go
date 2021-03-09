@@ -18,11 +18,11 @@ func (s *server) StartTCP() (err error) {
 	}
 	ln, err := net.ListenTCP("tcp", bind)
 	if err != nil {
-		logger.Print("failed to listen local port", s.lp)
+		logger.Error("failed to listen local port", s.lp)
 		os.Exit(1)
 	}
 
-	logger.Print("start ssrlocal server; listening... (curl --socks5 127.0.0.1:1080 http://www.google.com) for test")
+	logger.Info("start ssrlocal server; listening... (curl --socks5 127.0.0.1:1080 http://www.google.com) for test")
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -45,7 +45,7 @@ func (s *server) StartTCP() (err error) {
 		case <-ctx.Done():
 			goto endSig
 		case c := <-ch:
-			logger.Print("catch a signal:", c)
+			logger.Info("catch a signal:", c)
 			switch c {
 			case syscall.SIGHUP:
 				continue
@@ -72,6 +72,6 @@ func handTcpConn(s *server, conn *net.TCPConn) (err error) {
 		return
 	}
 	dstAddr, err := socks5.HandShake(conn)
-	logger.Print(dstAddr, err)
+	logger.Debug(dstAddr, err)
 	return
 }

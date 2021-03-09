@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	logger       = log.WithLevelAndMeta(log.DefaultLogger, log.LvInfo, "ssrlocal:")
+	//logger       = log.WithLevelAndMeta(log.DefaultLogger, log.LvInfo, "ssrlocal:")
+	logger       = log.NewWrapper("proxy:")
 	tcpKeepAlive = false
 	tcpSndBuf    = 4 * 1024
 	tcpRcvBuf    = 4 * 1024
@@ -38,7 +39,7 @@ func NewServer(cnf configs.Cnf) (s *server, err error) {
 	if len(addrs) < 1 {
 		return nil, errs.InvalidRemoteServers
 	}
-	logger.Print("listen at", lp, ";", "remote servers:", addrs, "remote port", rp)
+	logger.Info("listen at", lp, ";", "remote servers:", addrs, "remote port", rp)
 
 	s = &server{
 		t:        t,
