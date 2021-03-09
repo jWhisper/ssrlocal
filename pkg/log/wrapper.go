@@ -24,7 +24,7 @@ func NewWrapper(md string, logs ...Logger) (w wrapper) {
 	w[1] = il
 	w[2] = rl
 	for i := 0; i < maths.MinInt(3, len(logs)); i++ {
-		w[i] = WithLevelAndMeta(logs[i], 0, md)
+		w[i] = WithLevelAndMeta(logs[i], Level(i), md)
 	}
 	return
 }

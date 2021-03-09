@@ -17,7 +17,7 @@ var (
 )
 
 type server struct {
-	addrs     []string
+	server    []string
 	t, rp, lp string
 	cnf       configs.Cnf
 	obfs      obfs.Obfs
@@ -44,7 +44,7 @@ func NewServer(cnf configs.Cnf) (s *server, err error) {
 	s = &server{
 		t:        t,
 		cnf:      cnf,
-		addrs:    addrs, // a server slice
+		server:   addrs, // a server slice
 		rp:       rp,
 		lp:       lp,
 		obfs:     obfs.ObfsImp{},

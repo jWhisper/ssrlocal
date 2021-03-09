@@ -2,12 +2,14 @@ package proxy
 
 import (
 	"context"
+	"io"
 	"net"
 	"os"
 	"os/signal"
 	"runtime"
 	"syscall"
 
+	"github.com/jWhisper/ssrlocal/configs"
 	"github.com/jWhisper/ssrlocal/internal/proxy/socks5"
 )
 
@@ -60,18 +62,39 @@ endSig:
 	return nil
 }
 
-func handTcpConn(s *server, conn *net.TCPConn) (err error) {
-	defer conn.Close()
-	if err = conn.SetKeepAlive(tcpKeepAlive); err != nil {
+func handTcpConn(s *server, lc *net.TCPConn) {
+	var (
+		err error
+		ra  socks5.Addr
+		rc  *socks5.SSRTcpConn
+	)
+	defer lc.Close()
+	err = lc.SetKeepAlive(tcpKeepAlive)
+	if err != nil {
 		return
 	}
-	if err = conn.SetReadBuffer(tcpRcvBuf); err != nil {
+	err = lc.SetReadBuffer(tcpRcvBuf)
+	if err != nil {
 		return
 	}
-	if err = conn.SetWriteBuffer(tcpSndBuf); err != nil {
+	err = lc.SetWriteBuffer(tcpSndBuf)
+	if err != nil {
 		return
 	}
-	dstAddr, err := socks5.HandShake(conn)
-	logger.Debug(dstAddr, err)
-	return
+	ra, err = socks5.HandShake(lc)
+	if err != nil {
+		return
+	}
+	rc, err = socks5.NewSSRTcpConn(s.server[0], s.rp, configs.GetOption(s.cnf)...)
+	if err != nil {
+		logger.Error("failed to connect remote server!", err)
+		return
+	}
+	rc.Write(ra)
+	defer rc.Close()
+	_, _, err = tcpRelay(rc, lc)
+}
+
+func tcpRelay(dst, src io.ReadWriter) (int64, int64, error) {
+	return 1, 1, nil
 }
