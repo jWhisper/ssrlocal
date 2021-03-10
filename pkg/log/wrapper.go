@@ -2,7 +2,7 @@ package log
 
 import "github.com/jWhisper/ssrlocal/pkg/maths"
 
-type wrapper []Logger
+type Wrapper []Logger
 
 type logOpt struct {
 	md string
@@ -11,11 +11,11 @@ type logOpt struct {
 type logOptFunc func(*logOpt)
 
 // NewWrapper logs is debug, info, err logger slice
-func NewWrapper(md string, logs ...Logger) (w wrapper) {
-	if md == "" {
-		md = "default:"
-	}
-	w = make(wrapper, 3)
+func NewWrapper(md string, logs ...Logger) (w Wrapper) {
+	//if md == "" {
+	//	md = "default:"
+	//}
+	w = make(Wrapper, 3)
 	// ls := []Level{LvDebug, LvInfo, LvError}
 	dl := WithLevelAndMeta(DefaultLogger, LvDebug, md)
 	il := WithLevelAndMeta(DefaultLogger, LvInfo, md)
@@ -29,12 +29,12 @@ func NewWrapper(md string, logs ...Logger) (w wrapper) {
 	return
 }
 
-func (w wrapper) Debug(msg ...interface{}) {
+func (w Wrapper) Debug(msg ...interface{}) {
 	w[0].Print(msg...)
 }
-func (w wrapper) Info(msg ...interface{}) {
+func (w Wrapper) Info(msg ...interface{}) {
 	w[1].Print(msg...)
 }
-func (w wrapper) Error(msg ...interface{}) {
+func (w Wrapper) Error(msg ...interface{}) {
 	w[2].Print(msg...)
 }

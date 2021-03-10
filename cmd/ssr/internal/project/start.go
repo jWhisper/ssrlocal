@@ -31,10 +31,11 @@ func impStart() {
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("failed to read conf: %s\n", err)
 	}
-	server, err := proxy.NewServer(viper.GetViper())
+	opt := proxy.GetCnfOption()
+	server, err := proxy.NewServer(opt...)
 	if err != nil {
 		log.Fatalf("failed to get a server, check config", err)
 		return
 	}
-	server.StartTCP()
+	server.ListenTCP()
 }

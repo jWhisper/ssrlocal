@@ -9,22 +9,21 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/jWhisper/ssrlocal/configs"
 	"github.com/jWhisper/ssrlocal/internal/proxy/socks5"
 )
 
-func (s *server) StartTCP() (err error) {
+func (s *server) ListenTCP() (err error) {
 	var bind *net.TCPAddr
 	if bind, err = net.ResolveTCPAddr("tcp", s.lp); err != nil {
 		return
 	}
 	ln, err := net.ListenTCP("tcp", bind)
 	if err != nil {
-		logger.Error("failed to listen local port", s.lp)
+		s.logger.Error("failed to listen local port", s.lp)
 		os.Exit(1)
 	}
 
-	logger.Info("start ssrlocal server; listening... (curl --socks5 127.0.0.1:1080 http://www.google.com) for test")
+	s.logger.Info("start ssrlocal server; listening... (curl --socks5 127.0.0.1:1080 http://www.google.com) for test")
 
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -47,7 +46,7 @@ func (s *server) StartTCP() (err error) {
 		case <-ctx.Done():
 			goto endSig
 		case c := <-ch:
-			logger.Info("catch a signal:", c)
+			s.logger.Info("catch a signal:", c)
 			switch c {
 			case syscall.SIGHUP:
 				continue
@@ -85,9 +84,10 @@ func handTcpConn(s *server, lc *net.TCPConn) {
 	if err != nil {
 		return
 	}
-	rc, err = socks5.NewSSRTcpConn(s.server[0], s.rp, configs.GetOption(s.cnf)...)
+	so := socks5.GetCnfOption()
+	rc, err = socks5.DialOpt(so...)
 	if err != nil {
-		logger.Error("failed to connect remote server!", err)
+		s.logger.Error("failed to connect remote server!", err)
 		return
 	}
 	rc.Write(ra)

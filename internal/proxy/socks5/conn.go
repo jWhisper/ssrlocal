@@ -5,7 +5,6 @@ import (
 	"net"
 	"net/url"
 
-	"github.com/jWhisper/ssrlocal/configs"
 	"github.com/jWhisper/ssrlocal/internal/encrypt"
 	"github.com/jWhisper/ssrlocal/internal/obfs"
 	"github.com/jWhisper/ssrlocal/internal/protocol"
@@ -21,21 +20,32 @@ type SSRTcpConn struct {
 	pro  protocol.Protocol
 }
 
-func NewSSRTcpConn(ra, port string, o ...configs.Option) (*SSRTcpConn, error) {
-	opt := &configs.Options{
-		Type:    "ssr",
-		Timeout: 5,
+func DialOpt(o ...Option) (*SSRTcpConn, error) {
+	opt := &options{
+		server: nil,
+		sp:     ":1020",
+	}
+	for _, f := range o {
+		f(opt)
+	}
+	return Dial(opt.server[0], opt.sp, o...)
+}
+
+func Dial(ra, port string, o ...Option) (*SSRTcpConn, error) {
+	opt := &options{
+		typeof:  "ssr",
+		timeout: 5,
 	}
 	for _, f := range o {
 		f(opt)
 	}
 	host := ra + port
 	u := &url.URL{
-		Scheme: opt.Type,
+		Scheme: opt.typeof,
 		Host:   host,
 	}
 	q := u.Query()
-	q.Set("encrypt-method", opt.Method)
+	q.Set("encrypt-method", opt.method)
 	u.RawQuery = q.Encode()
 
 	conn, err := net.Dial("tcp", u.Host)
@@ -43,7 +53,7 @@ func NewSSRTcpConn(ra, port string, o ...configs.Option) (*SSRTcpConn, error) {
 		return nil, err
 	}
 
-	sc, err := encrypt.NewStreamCipher(opt.Method, opt.Password)
+	sc, err := encrypt.NewStreamCipher(opt.method, opt.password)
 	if err != nil {
 		return nil, err
 	}
