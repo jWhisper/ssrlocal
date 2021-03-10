@@ -10,4 +10,8 @@ var (
 	ErrCommandNotSupported = errors.New("invalid command")
 
 	ErrCipherMethodNotSupported = errors.New("invalid cipher method")
+	ErrNilConn                  = errors.New("nil conn")
+
+	ErrObfsNotSupported     = errors.New("invalid obfs")
+	ErrProtocolNotSupported = errors.New("invalid protocol")
 )

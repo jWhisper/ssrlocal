@@ -2,15 +2,21 @@ package socks5
 
 import (
 	"github.com/jWhisper/ssrlocal/configs"
+	"github.com/jWhisper/ssrlocal/pkg/log"
 	"github.com/spf13/viper"
 )
 
 type Option func(*options)
 
 type options struct {
-	timeout                                                                  int
+	dialtimeout, readtimeout, writetimeout                                   int
 	server                                                                   []string
 	typeof, sp, password, method, obfs, obfs_param, protocol, protocol_param string
+	logger                                                                   log.Wrapper
+}
+
+func Logger(l log.Wrapper) Option {
+	return func(o *options) { o.logger = l }
 }
 
 func Server(ss []string) Option {
@@ -39,8 +45,14 @@ func ObfsParam(s string) Option {
 func Protocol(s string) Option {
 	return func(o *options) { o.protocol_param = s }
 }
-func Timeout(s int) Option {
-	return func(o *options) { o.timeout = s }
+func Dialtimeout(s int) Option {
+	return func(o *options) { o.dialtimeout = s }
+}
+func Readtimeout(s int) Option {
+	return func(o *options) { o.readtimeout = s }
+}
+func Writetimeout(s int) Option {
+	return func(o *options) { o.writetimeout = s }
 }
 
 func getOption(c configs.Cnf) (o []Option) {
@@ -53,7 +65,10 @@ func getOption(c configs.Cnf) (o []Option) {
 	ptp := Protocol(c.GetString("protocol_param"))
 	s := Server(c.GetStringSlice("server"))
 	sp := Sp(c.GetString("server_port"))
-	o = []Option{t, p, m, ob, op, pt, ptp, s, sp}
+	dt := Dialtimeout(c.GetInt("dial_timeout"))
+	rt := Readtimeout(c.GetInt("read_timeout"))
+	wt := Writetimeout(c.GetInt("write_timeout"))
+	o = []Option{t, p, m, ob, op, pt, ptp, s, sp, dt, rt, wt}
 	return
 }
 

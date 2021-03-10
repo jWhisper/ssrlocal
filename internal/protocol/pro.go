@@ -1,7 +1,11 @@
 package protocol
 
-type Protocol interface {
+type IProtocol interface {
 }
 
-type ProImp struct {
+type Protocol struct {
+}
+
+func NewPro(n string) *Protocol {
+	return &Protocol{}
 }

@@ -10,9 +10,11 @@ import (
 	"syscall"
 
 	"github.com/jWhisper/ssrlocal/internal/proxy/socks5"
+	"github.com/jWhisper/ssrlocal/pkg/safe"
 )
 
 func (s *server) ListenTCP() (err error) {
+
 	var bind *net.TCPAddr
 	if bind, err = net.ResolveTCPAddr("tcp", s.lp); err != nil {
 		return
@@ -34,7 +36,7 @@ func (s *server) ListenTCP() (err error) {
 				if err != nil {
 					return
 				}
-				go handTcpConn(s, conn)
+				safe.Go(func() { handTcpConn(s, conn) })
 			}
 		}()
 	}
@@ -85,7 +87,8 @@ func handTcpConn(s *server, lc *net.TCPConn) {
 		return
 	}
 	so := socks5.GetCnfOption()
-	rc, err = socks5.DialOpt(so...)
+	lopt := socks5.Logger(s.logger)
+	rc, err = socks5.DialOpt(append(so, lopt)...)
 	if err != nil {
 		s.logger.Error("failed to connect remote server!", err)
 		return
