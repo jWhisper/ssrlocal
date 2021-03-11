@@ -47,6 +47,7 @@ func Dial(ra, port string, o ...Option) (*SSRTcpConn, error) {
 	for _, f := range o {
 		f(opt)
 	}
+	opt.logger.Debug("dial opt:", opt)
 	host := ra + port
 	u := &url.URL{
 		Scheme: opt.typeof,
@@ -78,6 +79,9 @@ func Dial(ra, port string, o ...Option) (*SSRTcpConn, error) {
 	ss := strings.Split(conn.RemoteAddr().String(), ":")
 	sp, _ := strconv.Atoi(ss[1])
 	ob, err := obfs.NewObfs(opt.obfs)
+	if err != nil {
+		return nil, err
+	}
 	ob.SetInfo(obfs.SetHost(ss[0]), obfs.SetPort(uint16(sp)), obfs.SetParam(opt.obfs_param), obfs.SetTcpMss(1460))
 	pro := protocol.NewPro(opt.protocol)
 	return &SSRTcpConn{

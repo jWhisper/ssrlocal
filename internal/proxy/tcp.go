@@ -90,7 +90,7 @@ func handTcpConn(s *server, lc *net.TCPConn) {
 	lopt := socks5.Logger(s.logger)
 	rc, err = socks5.DialOpt(append(so, lopt)...)
 	if err != nil {
-		s.logger.Error("failed to connect remote server!", err)
+		s.logger.Error("failed to create remoteConn:", err)
 		return
 	}
 	rc.Write(ra)

@@ -1,6 +1,8 @@
 package obfs
 
 import (
+	"strings"
+
 	"github.com/jWhisper/ssrlocal/errs"
 )
 
@@ -34,7 +36,7 @@ type obfs struct {
 }
 
 func NewObfs(n string) (IObfs, error) {
-	if c, ok := obfsSupported[n]; !ok {
+	if c, ok := obfsSupported[strings.ToLower(n)]; !ok {
 		return nil, errs.ErrObfsNotSupported
 	} else {
 		return c(), nil

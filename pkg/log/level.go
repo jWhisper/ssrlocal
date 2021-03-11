@@ -3,7 +3,7 @@ package log
 // Level is logger level
 type Level int8
 
-var GlobalLevel = LvInfo
+var GlobalLevel = LvDebug
 
 // logger Level
 const (

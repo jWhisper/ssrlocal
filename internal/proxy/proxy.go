@@ -28,7 +28,7 @@ func NewServer(o ...Option) (s *server, err error) {
 
 	s = &server{
 		lp:     opt.lp,
-		logger: log.NewWrapper("local:"),
+		logger: log.NewWrapper("ssrlocal:"),
 	}
 	s.logger.Info("listen at:", opt.lp)
 	return

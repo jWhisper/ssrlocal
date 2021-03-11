@@ -37,12 +37,15 @@ func Method(s string) Option {
 	return func(o *options) { o.method = s }
 }
 func Obfs(s string) Option {
-	return func(o *options) { o.obfs_param = s }
+	return func(o *options) { o.obfs = s }
 }
 func ObfsParam(s string) Option {
 	return func(o *options) { o.obfs_param = s }
 }
 func Protocol(s string) Option {
+	return func(o *options) { o.protocol = s }
+}
+func ProtocolParam(s string) Option {
 	return func(o *options) { o.protocol_param = s }
 }
 func Dialtimeout(s int) Option {
@@ -62,7 +65,7 @@ func getOption(c configs.Cnf) (o []Option) {
 	ob := Obfs(c.GetString("obfs"))
 	op := ObfsParam(c.GetString("obfs_param"))
 	pt := Protocol(c.GetString("protocol"))
-	ptp := Protocol(c.GetString("protocol_param"))
+	ptp := ProtocolParam(c.GetString("protocol_param"))
 	s := Server(c.GetStringSlice("server"))
 	sp := Sp(c.GetString("server_port"))
 	dt := Dialtimeout(c.GetInt("dial_timeout"))
